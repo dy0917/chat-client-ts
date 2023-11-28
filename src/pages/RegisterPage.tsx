@@ -16,7 +16,6 @@ function LoginPage() {
   const count = useSelector(selectCount);
   const status = useSelector(selectStatus);
 
-
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Prevents the default form submission behavior
     // console.log('context?.socketObject.socket!.id', socket!.id);

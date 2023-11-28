@@ -25,6 +25,10 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
         token,
       },
     });
+    tSocket.on('receiveMessge', (msg) => {
+      console.log('receiveMessge',msg);
+      // setMessages((messages) => [...messages, msg]);
+    });
     setSocket(tSocket);
   };
 

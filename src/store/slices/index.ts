@@ -1,9 +1,9 @@
-const isPendingAction = (action: { type: string }) => {
-  return action.type.endsWith('pending');
+const isPendingAction = (sliceName:string)=>(action: { type: string }) => {
+  return action.type.includes(sliceName)&&action.type.endsWith('pending');
 };
 
-const isFulfilledAction = (action: { type: string }) => {
-  return action.type.endsWith('fulfilled');
+const isFulfilledAction = (sliceName:string)=>(action: { type: string }) => {
+  return action.type.includes(sliceName) &&action.type.endsWith('fulfilled');
 };
 
 

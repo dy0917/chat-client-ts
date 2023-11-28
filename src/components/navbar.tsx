@@ -7,17 +7,16 @@ import { Button, Form, Nav, NavDropdown } from 'react-bootstrap';
 
 export const TopNavbar = () => {
   const { me } = useSelector((state: RootState) => state.auth);
-
   return (
-      <div>
+    <div>
       <div className="d-none d-sm-block">
         <Navbar expand="lg" className="bg-body-tertiary">
           <Container fluid>
             <Navbar.Brand href="#">Chat system</Navbar.Brand>
-            <Navbar.Toggle aria-controls="navbarScroll" />
+            <Navbar.Toggle aria-controls="navbarScroll" className="me-3" />
             <Navbar.Collapse id="navbarScroll">
               <NavDropdown
-                className="ms-auto "
+                className="ms-auto"
                 align={'end'}
                 title={`Hi, ${me.firstName}`}
                 id={`offcanvasNavbarDropdown-expand-xl`}
@@ -40,8 +39,7 @@ export const TopNavbar = () => {
             <Navbar.Brand href="#home">Chat system</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-                          <Nav className="me-auto ">
-                        
+              <Nav className="me-auto ">
                 <Nav.Link href="#link">Logout</Nav.Link>
               </Nav>
             </Navbar.Collapse>

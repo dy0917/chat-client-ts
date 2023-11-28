@@ -1,11 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from './slices/counterSlice';
 import authReducer from './slices/auth';
+import contactsReducer from './slices/contact';
+import roomReducer from './slices/room';
 
 const store = configureStore({
   reducer: {
     counter: counterReducer,
-    auth: authReducer
+    auth: authReducer,
+    contacts: contactsReducer,
+    room: roomReducer
   },
 });
 

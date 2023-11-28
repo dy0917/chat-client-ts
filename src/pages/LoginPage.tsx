@@ -54,12 +54,9 @@ function LoginPage() {
    }, [me,token, error]);
 
   const handleLogin: SubmitHandler<TLoginFormInput> = async (data) => {
-
       if (isValid) {
         await dispatch(loginAsync(data));
       }
-
-
   };
 
   return (
