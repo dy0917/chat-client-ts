@@ -3,7 +3,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import { RootState } from '../store';
-import { Button, Form, Nav, NavDropdown } from 'react-bootstrap';
+import { Nav, NavDropdown } from 'react-bootstrap';
 
 export const TopNavbar = () => {
   const { me } = useSelector((state: RootState) => state.auth);

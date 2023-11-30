@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
-import AppRoute from './pages/App';
 import ChatPage from './pages/ChatPage';
 import PageNotFound from './pages/PageNotFound';
 import ProtectedPage from './pages/ProtectedPage';

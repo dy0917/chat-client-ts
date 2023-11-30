@@ -11,7 +11,7 @@ import { Outlet } from 'react-router-dom';
 
 
 const ChatPage = () => {
-  const { socket, initSocket } = useSocketContext();
+  const { initSocket } = useSocketContext();
   useEffect(() => {
     initSocket();
   }, []);

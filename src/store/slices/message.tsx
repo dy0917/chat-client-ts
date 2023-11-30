@@ -1,7 +1,5 @@
-import { AxiosError } from 'axios';
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { isPendingAction, isFulfilledAction } from './index';
-import getAxios from '../../utils/axiosFactory';
+
+import { createSlice } from '@reduxjs/toolkit';
 import { loginWithTokenAsync } from './auth';
 
 export type TMessage = {

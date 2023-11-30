@@ -1,6 +1,6 @@
-import dotenv from 'dotenv'
-dotenv.config()
-const apiUrl = `https://${process.env.API_URL}` || 'http://localhost:5000/';
+const a = import.meta.env.VITE_API_URL;
+console.log('a',a);
+const apiUrl = `https://${import.meta.env.VITE_API_URL}` || 'http://localhost:5000/';
 
 
 import axios, { AxiosInstance, AxiosResponse } from 'axios';

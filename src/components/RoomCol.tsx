@@ -3,7 +3,7 @@ import { TContact } from '../types/contact';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { eventBus } from '../utils/eventBus';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 
 export const RoomCol = () => {
