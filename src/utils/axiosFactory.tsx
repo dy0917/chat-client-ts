@@ -1,6 +1,6 @@
 const a = import.meta.env.VITE_API_URL;
-console.log('a',a);
-const apiUrl = `https://${import.meta.env.VITE_API_URL}` || 'http://localhost:5000/';
+console.log('VITE_API_URL',a);
+const apiUrl = `https://${a}` || 'http://localhost:5000/';
 
 
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
