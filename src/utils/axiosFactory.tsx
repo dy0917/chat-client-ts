@@ -9,7 +9,7 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 const getAxios = (token?: string) => {
   const apiInstance: AxiosInstance = axios.create({
     baseURL: apiUrl, // Set your base URL
-    timeout: 10000, // Set a timeout for requests (in milliseconds)
+    timeout: 60000, // Set a timeout for requests (in milliseconds)
     headers: {
       'Content-Type': 'application/json',
 
