@@ -18,7 +18,7 @@ export const TopNavbar = () => {
               <NavDropdown
                 className="ms-auto"
                 align={'end'}
-                title={`Hi, ${me.firstName}`}
+                title={`Hi, ${me!.firstName}`}
                 id={`offcanvasNavbarDropdown-expand-xl`}
               >
                 <NavDropdown.Item href="#action3">Action</NavDropdown.Item>

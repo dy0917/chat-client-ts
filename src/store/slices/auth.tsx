@@ -2,11 +2,12 @@ import { AxiosError } from 'axios';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import getAxios from '../../utils/axiosFactory';
 import { isFulfilledAction, isPendingAction } from '.';
+import { TUser } from '../../types/user';
 
 const sliceName = 'auth';
 
 interface authState {
-  me?: any;
+  me?: TUser;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error?: any;
   token?: string;
@@ -43,7 +44,7 @@ export const loginAsync = createAsyncThunk(
 
 export const loginWithTokenAsync = createAsyncThunk(
   `${sliceName}/loginWithTokenAsync`,
-  async ({}: any, { rejectWithValue }) => {
+  async ({}:any, { rejectWithValue }) => {
     try {
       const response = await getAxios().get('/api/v1/user/me');
       return response.data;

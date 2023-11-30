@@ -1,8 +1,7 @@
 // src/counterSlice.ts
 import { AxiosError } from 'axios';
 import getAxios from '../../utils/axiosFactory';
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../index';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { loginWithTokenAsync } from './auth';
 
 const sliceName = 'room';
@@ -40,6 +39,7 @@ export const getRoomById = (id: string) => (state: any) => {
 
   return obj[id];
 };
+
 
 const roomSlice = createSlice({
   name: sliceName,
