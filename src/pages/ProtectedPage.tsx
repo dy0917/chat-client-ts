@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 // wrap around logged-in user only routes to protect them
 function ProtectedPage() {
-  const { me, status, error, token } = useSelector(
+  const { status, error, token } = useSelector(
     (state: RootState) => state.auth
   );
   const dispatch = useDispatch<AppDispatch>();

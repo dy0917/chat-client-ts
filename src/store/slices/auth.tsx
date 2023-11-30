@@ -85,16 +85,16 @@ const authSlice = createSlice({
         state.status = 'succeeded';
         state.me = action.payload!.user;
       })
-      .addCase(loginWithTokenAsync.rejected, (state, action) => {
+      .addCase(loginWithTokenAsync.rejected, (state) => {
         state.status = 'failed';
         state.error = 'failed to login';
       });
 
-    builder.addMatcher(isPendingAction(sliceName), (state, action) => {
+    builder.addMatcher(isPendingAction(sliceName), (state) => {
       console.log('isPendingAction');
       state.status = 'loading';
     });
-    builder.addMatcher(isFulfilledAction(sliceName), (state, action) => {
+    builder.addMatcher(isFulfilledAction(sliceName), (state) => {
       console.log('isFulfilledAction');
       state.status = 'succeeded';
     });

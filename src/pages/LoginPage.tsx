@@ -39,7 +39,7 @@ function LoginPage() {
     },
   });
 
-  const { me, status, error, token } = useSelector((state: RootState) => state.auth);
+  const { me, error, token } = useSelector((state: RootState) => state.auth);
   useEffect(() => {
     if (token) { 
       navigate('/chat');

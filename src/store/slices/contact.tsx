@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { isPendingAction, isFulfilledAction } from './index';
 import getAxios from '../../utils/axiosFactory';
 
@@ -64,10 +64,10 @@ const contactsSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      .addMatcher(isPendingAction(sliceName), (state, action) => {
+      .addMatcher(isPendingAction(sliceName), (state) => {
         state.status = 'loading';
       })
-      .addMatcher(isFulfilledAction(sliceName), (state, action) => {
+      .addMatcher(isFulfilledAction(sliceName), (state) => {
         state.status = 'succeeded';
       });
   },

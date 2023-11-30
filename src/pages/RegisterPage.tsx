@@ -2,26 +2,17 @@ import '../App.css';
 import { Container, Row, Form, Col, Button } from 'react-bootstrap';
 import {
   incrementAsync,
-  selectCount,
-  selectStatus,
 } from '../store/slices/counterSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
-import { useSocketContext } from '../store/socketContext';
-import { useNavigate } from 'react-router-dom';
+
 
 function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-  const count = useSelector(selectCount);
-  const status = useSelector(selectStatus);
 
   const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Prevents the default form submission behavior
     // console.log('context?.socketObject.socket!.id', socket!.id);
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
 
     try {
 
