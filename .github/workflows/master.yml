@@ -45,7 +45,7 @@ jobs:
       - name: create env file
         run: |
           touch .env
-          echo VITE_API_URL =${{ vars.VITE_API_URL }} >> .env
+          echo VITE_API_URL=${{ vars.VITE_API_URL }} >> .env
           echo GITHUB_SHA=${{env.GITHUB_SHA}} >> .env
           echo GITHUB_HEAD_REF=${{env.GITHUB_HEAD_REF}} >> .env
           cat .env
