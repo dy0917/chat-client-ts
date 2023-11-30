@@ -46,6 +46,7 @@ jobs:
         run: |
           touch .env
           echo ${{ vars.VITE_API_URL }}
+          echo VITE_API_URL=${{ vars.VITE_API_URL }} >> .env
           cat .env
       - name: npm install, build, and test
         run: |
