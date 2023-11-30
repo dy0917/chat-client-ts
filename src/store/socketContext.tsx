@@ -1,7 +1,8 @@
 import React, { createContext, useContext, ReactNode, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { io, Socket } from 'socket.io-client';
 import { RootState } from '.';
+import { addMessage } from './slices/message';
 
 type SocketContextProps = {
   socket: Socket;
@@ -17,7 +18,7 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const { token } = useSelector((state: RootState) => state.auth);
   const [socket, setSocket] = useState<Socket | undefined>();
-
+  const dispatch = useDispatch();
   const initSocket = () => {
     const tSocket = io(ENDPOINT, {
       transports: ['websocket', 'polling'],
@@ -26,7 +27,8 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
       },
     });
     tSocket.on('receiveMessge', (msg) => {
-      console.log('receiveMessge',msg);
+      console.log('receiveMessge', msg);
+      dispatch(addMessage(msg));
       // setMessages((messages) => [...messages, msg]);
     });
     setSocket(tSocket);

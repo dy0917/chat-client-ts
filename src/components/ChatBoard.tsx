@@ -9,40 +9,43 @@ import {
   Badge,
 } from 'react-bootstrap';
 import { useSocketContext } from '../store/socketContext';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getRoomById } from '../store/slices/room';
 import { useParams } from 'react-router-dom';
-interface Message {
-  text: string;
-  sender: string;
-}
+import {
+  TMessage,
+  addMessage,
+  getMessageByRoomId,
+} from '../store/slices/message';
+import { RootState } from '../store';
 
-type ChatBoard = {
-  roomId: string;
-};
 export const ChatBoard = () => {
-  let { roomId } = useParams();
-  console.log(roomId);
-
+  let { roomId } = useParams<{ roomId: string }>();
+  const { me } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
   const room = useSelector(getRoomById(roomId!));
-  console.log('room', room);
+  const messages = useSelector(getMessageByRoomId(roomId!));
   const { socket } = useSocketContext();
-  const [messages, setMessages] = useState<Message[]>([]);
+
   const [newMessage, setNewMessage] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const addMessage = async () => {
+  const sumbitMessage = async () => {
     if (newMessage.trim() === '') return;
-    console.log('655e85bc3425e48e19e7f07d');
-    console.log(' room.users[0]._id', room.users[0]._id);
-    const updatedMessages = [...messages, { text: newMessage, sender: 'user' }];
+    // const updatedMessages = [...messages, { text: newMessage, sender: 'user' }];
     socket.emit(
       'sendMessage',
-      { message: newMessage, roomId: room._id, receiverId: room.users[0]._id },
-      (message: any) => {
-        console.log(message);
+      {
+        context: newMessage,
+        chatRoomId: room._id,
+        senderId: me?._id,
+        receiverId: room.users[0]._id,
+      },
+      (response: { status: string; message: TMessage }) => {
+        dispatch(addMessage(response.message));
+
       }
     );
-    await setMessages(updatedMessages);
+    // await setMessages(updatedMessages);
     setNewMessage('');
     // Scroll to the bottom when a new message is added
     scrollToBottom();
@@ -73,11 +76,13 @@ export const ChatBoard = () => {
         }}
       >
         {/* Message list */}
-        {messages.map((message, index) => (
-          <Row key={index}>
+        {messages.map((message: TMessage) => (
+          <Row key={message._id}>
             <Col>
-              <h2 className="float-end">
-                <Badge pill>{message.text}</Badge>
+              <h2 className={me!._id == message.senderId ? 'float-end' : ''}>
+                <Badge pill bg={me!._id == message.senderId ? 'primary' : 'secondary'}>
+                  {message.context}
+                </Badge>
               </h2>
             </Col>
           </Row>
@@ -96,7 +101,7 @@ export const ChatBoard = () => {
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Type your message..."
               />
-              <Button variant="primary" onClick={addMessage}>
+              <Button variant="primary" onClick={sumbitMessage}>
                 Send
               </Button>
             </InputGroup>

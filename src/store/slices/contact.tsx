@@ -41,7 +41,6 @@ export const findUsersByQueryString = createAsyncThunk(
   }
 );
 
-
 const contactsSlice = createSlice({
   name: sliceName,
   initialState,

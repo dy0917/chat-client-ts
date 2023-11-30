@@ -1,4 +1,7 @@
-const apiUrl = 'http://localhost:5000/';
+import dotenv from 'dotenv'
+dotenv.config()
+const apiUrl = `https://${process.env.API_URL}` || 'http://localhost:5000/';
+
 
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
@@ -6,10 +9,10 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 const getAxios = (token?: string) => {
   const apiInstance: AxiosInstance = axios.create({
     baseURL: apiUrl, // Set your base URL
-    timeout: 6000, // Set a timeout for requests (in milliseconds)
+    timeout: 10000, // Set a timeout for requests (in milliseconds)
     headers: {
       'Content-Type': 'application/json',
-      // You can add other default headers here
+
     },
   });
 
