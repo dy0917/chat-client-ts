@@ -52,11 +52,11 @@ function RegisterPage() {
   } = useForm<TRegistrationFormInput>({
     resolver: yupResolver(RegistationFormSchema),
     defaultValues: {
-      firstName: 'e',
-      lastName: 'h',
-      email: 'ethan@test.com',
-      password: 'Password1',
-      repeatPassword: 'Password1',
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      repeatPassword: '',
     },
   });
 
