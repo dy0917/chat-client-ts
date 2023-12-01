@@ -7,7 +7,6 @@ import {
   FormControl,
   Button,
   Badge,
-  Navbar,
 } from 'react-bootstrap';
 import { useSocketContext } from '../store/socketContext';
 import { useDispatch, useSelector } from 'react-redux';

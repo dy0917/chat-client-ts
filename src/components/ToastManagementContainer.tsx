@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Toast, ToastContainer } from 'react-bootstrap';
+import { ToastContainer } from 'react-bootstrap';
 import ToastItem from './ToastItem';
 import { eventBus } from '../utils/eventBus';
 import { TNotification } from '../types/notification';

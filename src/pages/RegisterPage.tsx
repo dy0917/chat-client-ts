@@ -1,7 +1,7 @@
 import '../App.css';
-import { Container, Row, Form, Col, Button } from 'react-bootstrap';
+import { Container, Row, Form, Col } from 'react-bootstrap';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
-import { loginAsync, registerAsync } from '../store/slices/auth';
+import { registerAsync } from '../store/slices/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import store, { AppDispatch, RootState } from '../store';
 import { NavLink, useNavigate } from 'react-router-dom';
