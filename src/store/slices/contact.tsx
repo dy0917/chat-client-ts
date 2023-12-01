@@ -1,22 +1,21 @@
 import { AxiosError } from 'axios';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createAsyncThunk,
+  createSelector,
+} from '@reduxjs/toolkit';
 import { isPendingAction, isFulfilledAction } from './index';
 import getAxios from '../../utils/axiosFactory';
+import { TUser } from '../../types/user';
 
-type TUser = {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-};
 const sliceName = 'contacts';
-interface contactState {
+interface ContactState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error?: any;
   tempContacts?: Array<TUser>;
 }
 
-const initialState: contactState = {
+const initialState: ContactState = {
   status: 'idle',
   error: undefined,
   tempContacts: [],
@@ -38,6 +37,23 @@ export const findUsersByQueryString = createAsyncThunk(
         return rejectWithValue(error.response?.data);
       }
     }
+  }
+);
+
+const allContacts = (state: ContactState) => state.tempContacts;
+
+// expects a number as the second argument
+const selectedContactId = (_state: ContactState, contactId: string) =>
+  contactId;
+
+export const getContactById = createSelector(
+  [allContacts, selectedContactId],
+  (allContacts, selectedContactId) => {
+    const obj = allContacts!.reduce((accumulator: any, value: any) => {
+      return { ...accumulator, [value._id]: value };
+    }, {});
+
+    return obj[selectedContactId];
   }
 );
 
@@ -72,7 +88,5 @@ const contactsSlice = createSlice({
       });
   },
 });
-
-// export const { clearToken} = authSlice.actions;
 
 export default contactsSlice.reducer;

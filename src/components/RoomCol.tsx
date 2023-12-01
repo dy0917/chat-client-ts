@@ -1,10 +1,9 @@
 import { Container, Row, Col, Button, ListGroup } from 'react-bootstrap';
-import { TContact } from '../types/contact';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { eventBus } from '../utils/eventBus';
 import { NavLink } from 'react-router-dom';
-
+import { TRoom } from '../types';
 
 export const RoomCol = () => {
   const { rooms } = useSelector((state: RootState) => state.room);
@@ -40,20 +39,14 @@ export const RoomCol = () => {
       </Row>
       <Row>
         <ListGroup as="ol">
-          {rooms.map((room: TContact, index: string) => (
+          {rooms.map((room: TRoom) => (
             <NavLink
               style={{ textDecoration: 'none' }}
               to={`/chat/${room._id}`}
               key={room._id}
             >
               {({ isActive }) => (
-    
-
-                <ListGroup.Item
-                  key={index}
-                  as="li"
-                  className={getClassName(isActive)}
-                >
+                <ListGroup.Item as="li" className={getClassName(isActive)}>
                   <div className="ms-2 me-auto">
                     <div className="fw-bold"> {room.users[0].firstName}</div>
                     last message time

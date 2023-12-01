@@ -1,13 +1,14 @@
 import '../App.css';
-import { Container, Row, Form, Col, Button } from 'react-bootstrap';
+import { Container, Row, Form, Col } from 'react-bootstrap';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { loginAsync } from '../store/slices/auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../store';
-import { useNavigate } from 'react-router-dom';
+import store, { AppDispatch, RootState } from '../store';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { LoadingButton } from '../components/LoadingButton';
 type TLoginFormInput = {
   email: string;
   password: string;
@@ -26,38 +27,44 @@ const loginFormSchema = yup
 function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
+  const [serverError, setServerError] = useState<string | undefined>(undefined);
   const {
     control,
+    watch,
     formState: { isValid, errors },
     handleSubmit,
   } = useForm<TLoginFormInput>({
     resolver: yupResolver(loginFormSchema),
     defaultValues: {
-      email: '12@agga.com',
-      password: 'Password1',
+      email: '',
+      password: '',
     },
   });
 
-  const { me, error, token } = useSelector((state: RootState) => state.auth);
+  const { status, token } = useSelector((state: RootState) => state.auth);
   useEffect(() => {
-    if (token) { 
-      navigate('/chat');
-  }
-  }, []);
-
-  
-  useEffect(() => {
-    if (me && token && !error) { 
+    if (token) {
       navigate('/chat');
     }
-   }, [me,token, error]);
+  }, []);
 
   const handleLogin: SubmitHandler<TLoginFormInput> = async (data) => {
-      if (isValid) {
-        await dispatch(loginAsync(data));
+    if (isValid) {
+      await dispatch(loginAsync(data));
+      const status = store.getState().auth.status;
+      if (status == 'failed') {
+        setServerError('Email or password is not correct.');
+        return;
       }
+      navigate('/chat');
+    }
   };
+  useEffect(() => {
+    const subscription = watch(() => {
+      setServerError(undefined);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
 
   return (
     <Container className="mt-5">
@@ -88,7 +95,7 @@ function LoginPage() {
                 control={control}
                 render={({ field }) => (
                   <Form.Control
-                    type='password'
+                    type="password"
                     className={errors.password ? 'is-invalid' : ''}
                     {...field}
                   />
@@ -98,9 +105,19 @@ function LoginPage() {
                 {errors.password?.message}
               </Form.Control.Feedback>
             </Form.Group>
-            <Button type="submit" disabled={!isValid}>
-              Login
-            </Button>
+            {serverError && (
+              <div className="is-invalid text-danger">{serverError}</div>
+            )}
+            <Row>
+              <Col className="d-grid gap-2">
+                <LoadingButton type={'submit'} status={status} text={'Login'} />
+              </Col>
+            </Row>
+            <Row>
+              <Col className="text-center">
+                Don't have an account <NavLink to={'/signup'}>sign up</NavLink>
+              </Col>
+            </Row>
           </Form>
         </Col>
       </Row>

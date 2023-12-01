@@ -7,6 +7,7 @@ import {
   FormControl,
   Button,
   Badge,
+  Navbar,
 } from 'react-bootstrap';
 import { useSocketContext } from '../store/socketContext';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,18 +21,25 @@ import {
 import { RootState } from '../store';
 
 export const ChatBoard = () => {
-  let { roomId } = useParams<{ roomId: string }>();
+  let { roomId } = useParams<{ roomId: string | undefined }>();
   const { me } = useSelector((state: RootState) => state.auth);
+
   const dispatch = useDispatch();
-  const room = useSelector(getRoomById(roomId!));
-  const messages = useSelector(getMessageByRoomId(roomId!));
+  const room = useSelector((state: RootState) =>
+    getRoomById(state.room, roomId!)
+  );
+  const messages = useSelector((state: RootState) =>
+    getMessageByRoomId(state.message, roomId!)
+  );
+
+  const contact = room.users[0];
+
   const { socket } = useSocketContext();
 
   const [newMessage, setNewMessage] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const sumbitMessage = async () => {
     if (newMessage.trim() === '') return;
-    // const updatedMessages = [...messages, { text: newMessage, sender: 'user' }];
     socket.emit(
       'sendMessage',
       {
@@ -42,10 +50,8 @@ export const ChatBoard = () => {
       },
       (response: { status: string; message: TMessage }) => {
         dispatch(addMessage(response.message));
-
       }
     );
-    // await setMessages(updatedMessages);
     setNewMessage('');
     // Scroll to the bottom when a new message is added
     scrollToBottom();
@@ -53,9 +59,6 @@ export const ChatBoard = () => {
 
   // Function to scroll to the bottom of the chat
   const scrollToBottom = () => {
-    //   var objDiv = document.getElementById("your_div");
-    //   messagesEndRef.current?.scrollTop = messagesEndRef.current?.scrollHeight;
-
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -65,6 +68,15 @@ export const ChatBoard = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <>
+      <div className="d-flex flex-row-reverse bd-highlight">
+        <div className="d-block d-lg-none">
+          <Button>{'<'}</Button>
+        </div>
+        <div className="p-1 flex-fill text-center">
+          <b>{contact.firstName}</b>
+        </div>
+      </div>
+
       <Container
         fluid
         style={{
@@ -80,7 +92,10 @@ export const ChatBoard = () => {
           <Row key={message._id}>
             <Col>
               <h2 className={me!._id == message.senderId ? 'float-end' : ''}>
-                <Badge pill bg={me!._id == message.senderId ? 'primary' : 'secondary'}>
+                <Badge
+                  pill
+                  bg={me!._id == message.senderId ? 'primary' : 'secondary'}
+                >
                   {message.context}
                 </Badge>
               </h2>

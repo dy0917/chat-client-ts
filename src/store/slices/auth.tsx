@@ -27,7 +27,6 @@ export const loginAsync = createAsyncThunk(
     { email, password }: { email: string; password: string },
     { rejectWithValue }
   ) => {
-    // Simulate an asynchronous operation (e.g., API call)
     try {
       const response = await getAxios().post('/api/v1/auth/login', {
         email,
@@ -42,9 +41,36 @@ export const loginAsync = createAsyncThunk(
   }
 );
 
+export const registerAsync = createAsyncThunk(
+  `${sliceName}/registerAsync`,
+  async (
+    {
+      firstName,
+      lastName,
+      email,
+      password,
+    }: { firstName: string; lastName: string; email: string; password: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await getAxios().post('/api/v1/auth/register', {
+        firstName,
+        lastName,
+        email,
+        password,
+      });
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return rejectWithValue(error.response?.data);
+      }
+    }
+  }
+);
+
 export const loginWithTokenAsync = createAsyncThunk(
   `${sliceName}/loginWithTokenAsync`,
-  async ({}:any, { rejectWithValue }) => {
+  async ({}: any, { rejectWithValue }) => {
     try {
       const response = await getAxios().get('/api/v1/user/me');
       return response.data;
@@ -69,8 +95,8 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.status = 'succeeded';
+        state.error = undefined;
         state.me = action.payload!.user;
         state.token = action.payload!.token;
         localStorage.setItem('token', action.payload!.token);
@@ -78,9 +104,7 @@ const authSlice = createSlice({
       .addCase(loginAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
-      });
-
-    builder
+      })
       .addCase(loginWithTokenAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.me = action.payload!.user;
@@ -88,14 +112,21 @@ const authSlice = createSlice({
       .addCase(loginWithTokenAsync.rejected, (state) => {
         state.status = 'failed';
         state.error = 'failed to login';
+      })
+      .addCase(registerAsync.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.me = action.payload!.user;
+      })
+      .addCase(registerAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        console.log('action', action);
+        state.error = action.payload;
       });
 
     builder.addMatcher(isPendingAction(sliceName), (state) => {
-      console.log('isPendingAction');
       state.status = 'loading';
     });
     builder.addMatcher(isFulfilledAction(sliceName), (state) => {
-      console.log('isFulfilledAction');
       state.status = 'succeeded';
     });
   },

@@ -1,19 +1,22 @@
 import { Button, Spinner } from 'react-bootstrap';
 
 export function LoadingButton({
-    onClick,
+  onClick,
   status,
+  type,
   disabled,
   text,
 }: {
-    onClick: () => Promise<void>;
+  onClick?: () => Promise<void>;
+  type?: 'submit' | undefined;
   disabled?: boolean;
-  status: string;
+  status?: string;
   text: string;
 }) {
   return (
     <Button
       variant="primary"
+      type={type}
       onClick={onClick}
       disabled={disabled || status == 'loading'}
     >

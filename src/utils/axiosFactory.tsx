@@ -1,7 +1,6 @@
-const a = import.meta.env.VITE_API_URL;
-console.log('VITE_API_URL',a);
-const apiUrl = `https://${a}` || 'http://localhost:5000/';
+const envURL = import.meta.env.VITE_API_URL;
 
+const apiUrl = envURL ? `https://${envURL}` : 'http://localhost:5000/';
 
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
@@ -12,7 +11,6 @@ const getAxios = (token?: string) => {
     timeout: 60000, // Set a timeout for requests (in milliseconds)
     headers: {
       'Content-Type': 'application/json',
-
     },
   });
 

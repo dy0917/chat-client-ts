@@ -1,17 +1,24 @@
 // src/counterSlice.ts
 import { AxiosError } from 'axios';
 import getAxios from '../../utils/axiosFactory';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createAsyncThunk,
+  createSelector,
+} from '@reduxjs/toolkit';
 import { loginWithTokenAsync } from './auth';
+import { TRoom } from '../../types';
 
 const sliceName = 'room';
-interface CounterState {
-  rooms: any;
+
+
+type TRoomState = {
+  rooms: Array<TRoom>;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error?: any;
 }
 
-const initialState: CounterState = {
+const initialState: TRoomState = {
   rooms: [],
   status: 'idle',
   error: undefined,
@@ -32,20 +39,26 @@ export const newContact = createAsyncThunk(
   }
 );
 
-export const getRoomById = (id: string) => (state: any) => {
-  const obj = state.room.rooms.reduce((accumulator: any, value: any) => {
-    return { ...accumulator, [value._id]: value };
-  }, {});
+const allRooms = (state: TRoomState) => state.rooms;
 
-  return obj[id];
-};
+// expects a number as the second argument
+const selectRoomId = (_state: TRoomState, roomId: string) => roomId;
 
+export const getRoomById = createSelector(
+  [allRooms, selectRoomId],
+  (allRooms, selectRoomId) => {
+    const obj = allRooms.reduce((accumulator: any, value: any) => {
+      return { ...accumulator, [value._id]: value };
+    }, {});
+
+    return obj[selectRoomId];
+  }
+);
 
 const roomSlice = createSlice({
   name: sliceName,
   initialState,
   reducers: {
-    // get
   },
 
   extraReducers: (builder) => {

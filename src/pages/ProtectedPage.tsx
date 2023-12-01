@@ -11,25 +11,23 @@ function ProtectedPage() {
   );
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-    useEffect(() => { 
-        if (token) {
-            dispatch(loginWithTokenAsync({}));
-          }
-    },[])
-    useEffect(() => {
-        if ((error && status == 'failed') || !token) {
+  useEffect(() => {
+    if (token) {
+      dispatch(loginWithTokenAsync({}));
+    }
+  }, []);
+  useEffect(() => {
+    if ((error && status == 'failed') || !token) {
       dispatch(clearToken());
       navigate('/');
       return;
     }
   }, [status, error]);
 
-  return !error && status == 'succeeded' ? (
-    <Outlet />
-  ) : (
-    <div>
-              Loading...
-    </div>
+  return (
+    <>
+      {!error && status == 'succeeded' ? <Outlet /> : <div>Loading...</div>}
+    </>
   );
 }
 export default ProtectedPage;

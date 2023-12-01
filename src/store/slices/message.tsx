@@ -1,5 +1,4 @@
-
-import { createSlice } from '@reduxjs/toolkit';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { loginWithTokenAsync } from './auth';
 
 export type TMessage = {
@@ -31,20 +30,23 @@ const contactsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(loginWithTokenAsync.fulfilled, (state, action) => {
-        state.messages = action.payload.messages;
-      });
+    builder.addCase(loginWithTokenAsync.fulfilled, (state, action) => {
+      state.messages = action.payload.messages;
+    });
   },
 });
 
-export const getMessageByRoomId = (roomId: string) => (state: any) => {
+const selectRoomId = (_state: any, roomId: string) => roomId;
 
-  const messages = state.message.messages.filter(
-    (message: TMessage) => message.chatRoomId == roomId
-  );
-  return messages;
-};
+export const getMessageByRoomId = createSelector(
+  [(state: contactState) => state.messages, selectRoomId],
+  (messages, roomId) => {
+    const selectedMessages = messages.filter(
+      (message: TMessage) => message.chatRoomId == roomId
+    );
+    return selectedMessages;
+  }
+);
 
 export const { addMessage } = contactsSlice.actions;
 
