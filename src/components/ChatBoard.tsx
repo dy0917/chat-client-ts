@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Container,
   Col,
@@ -6,18 +7,17 @@ import {
   Row,
   FormControl,
   Button,
-  Badge,
 } from 'react-bootstrap';
-import { useSocketContext } from '../store/socketContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRoomById } from '../store/slices/room';
-import { useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import {
   TMessage,
   addMessage,
   getMessageByRoomId,
 } from '../store/slices/message';
 import { RootState } from '../store';
+import { MessageFactory } from './Messages/MessageFactory';
 
 export const ChatBoard = () => {
   let { roomId } = useParams<{ roomId: string | undefined }>();
@@ -27,30 +27,27 @@ export const ChatBoard = () => {
   const room = useSelector((state: RootState) =>
     getRoomById(state.room, roomId!)
   );
+
   const messages = useSelector((state: RootState) =>
     getMessageByRoomId(state.message, roomId!)
   );
 
   const contact = room.users[0];
 
-  const { socket } = useSocketContext();
-
   const [newMessage, setNewMessage] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const sumbitMessage = async () => {
     if (newMessage.trim() === '') return;
-    socket.emit(
-      'sendMessage',
-      {
-        context: newMessage,
-        chatRoomId: room._id,
-        senderId: me?._id,
-        receiverId: room.users[0]._id,
-      },
-      (response: { status: string; message: TMessage }) => {
-        dispatch(addMessage(response.message));
-      }
-    );
+
+    const newMessageObj = {
+      context: newMessage,
+      chatRoomId: room._id,
+      senderId: me?._id,
+      receiverId: room.users[0]._id,
+      tempId: uuidv4(),
+    };
+
+    dispatch(addMessage(newMessageObj));
     setNewMessage('');
     // Scroll to the bottom when a new message is added
     scrollToBottom();
@@ -69,7 +66,9 @@ export const ChatBoard = () => {
     <>
       <div className="d-flex flex-row-reverse bd-highlight">
         <div className="d-block d-lg-none">
-          <Button>{'<'}</Button>
+          <NavLink to={'/chat'}>
+            <Button>{'<'}</Button>
+          </NavLink>
         </div>
         <div className="p-1 flex-fill text-center">
           <b>{contact.firstName}</b>
@@ -87,18 +86,10 @@ export const ChatBoard = () => {
         }}
       >
         {/* Message list */}
+
         {messages.map((message: TMessage) => (
-          <Row key={message._id}>
-            <Col>
-              <h2 className={me!._id == message.senderId ? 'float-end' : ''}>
-                <Badge
-                  pill
-                  bg={me!._id == message.senderId ? 'primary' : 'secondary'}
-                >
-                  {message.context}
-                </Badge>
-              </h2>
-            </Col>
+          <Row key={uuidv4()}>
+            <MessageFactory message={message}></MessageFactory>
           </Row>
         ))}
         <div ref={messagesEndRef} />

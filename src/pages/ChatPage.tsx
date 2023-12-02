@@ -1,17 +1,24 @@
 import { useEffect } from 'react';
-import {
-  Container,
-  Row,
-  Col,
-} from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { useSocketContext } from '../store/socketContext';
 import Example from '../components/addContactModal';
 import { RoomCol } from '../components/RoomCol';
-import { Outlet } from 'react-router-dom';
-
+import { Outlet, useLocation } from 'react-router-dom';
 
 const ChatPage = () => {
   const { initSocket } = useSocketContext();
+  let location = useLocation();
+  useEffect(() => {
+    console.log(location.pathname);
+    if (location.pathname.toLowerCase().endsWith('chat')) {
+    }
+  }, [location]);
+
+  var btnClass = location.pathname.toLowerCase().endsWith('chat')
+    ? ''
+    : 'd-none d-sm-none d-sm-none d-md-block';
+  // 'btn-pressed': this.state.isPressed,
+  // 'btn-over': !this.state.isPressed && this.state.isHovered
   useEffect(() => {
     initSocket();
   }, []);
@@ -22,7 +29,7 @@ const ChatPage = () => {
         <Row className="justify-content-center">
           <Col md={8}>
             <Row>
-              <Col md={4}>
+              <Col md={4} className={`${btnClass}`}>
                 <RoomCol></RoomCol>
               </Col>
               <Col>
