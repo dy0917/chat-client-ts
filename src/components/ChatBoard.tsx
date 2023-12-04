@@ -11,13 +11,10 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { getRoomById } from '../store/slices/room';
 import { NavLink, useParams } from 'react-router-dom';
-import {
-  TMessage,
-  addMessage,
-  getMessageByRoomId,
-} from '../store/slices/message';
+import { addMessage, getMessageByRoomId } from '../store/slices/message';
 import { RootState } from '../store';
 import { MessageFactory } from './Messages/MessageFactory';
+import { TMessage } from '../types';
 
 export const ChatBoard = () => {
   let { roomId } = useParams<{ roomId: string | undefined }>();
@@ -65,7 +62,7 @@ export const ChatBoard = () => {
   return (
     <>
       <div className="d-flex flex-row-reverse bd-highlight">
-        <div className="d-block d-lg-none">
+        <div className="d-block d-xl-none">
           <NavLink to={'/chat'}>
             <Button>{'<'}</Button>
           </NavLink>
@@ -89,7 +86,9 @@ export const ChatBoard = () => {
 
         {messages.map((message: TMessage) => (
           <Row key={uuidv4()}>
-            <MessageFactory message={message}></MessageFactory>
+            <MessageFactory
+              message={message}
+            ></MessageFactory>
           </Row>
         ))}
         <div ref={messagesEndRef} />

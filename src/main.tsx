@@ -1,6 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
+import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AppRoutes from './router.js';
 import store from './store/index.js';

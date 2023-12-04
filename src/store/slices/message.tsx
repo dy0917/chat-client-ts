@@ -1,21 +1,15 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { loginWithTokenAsync } from './auth';
-export type TMessage = {
-  _id?: string;
-  context: string;
-  senderId: string;
-  receiverId?: string;
-  chatRoomId: string;
-  tempId?: string;
-};
+import { TMessage } from '../../types';
+
 const sliceName = 'contacts';
-interface MessageState {
+type TMessageState = {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error?: any;
   messages: Array<TMessage>;
-}
+};
 
-const initialState: MessageState = {
+const initialState: TMessageState = {
   status: 'idle',
   error: undefined,
   messages: [],
@@ -49,8 +43,8 @@ const contactsSlice = createSlice({
   },
 });
 
-const selectRoomId = (_state: any, roomId: string) => roomId;
-const allMessages = (state: MessageState) => state.messages;
+const selectRoomId = (_state: TMessageState, roomId: string) => roomId;
+const allMessages = (state: TMessageState) => state.messages;
 
 export const getMessageByRoomId = createSelector(
   [allMessages, selectRoomId],

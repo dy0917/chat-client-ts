@@ -1,4 +1,3 @@
-import '../App.css';
 import { Container, Row, Form, Col } from 'react-bootstrap';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import { registerAsync } from '../store/slices/auth';

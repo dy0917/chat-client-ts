@@ -8,17 +8,10 @@ import { Outlet, useLocation } from 'react-router-dom';
 const ChatPage = () => {
   const { initSocket } = useSocketContext();
   let location = useLocation();
-  useEffect(() => {
-    console.log(location.pathname);
-    if (location.pathname.toLowerCase().endsWith('chat')) {
-    }
-  }, [location]);
 
   var btnClass = location.pathname.toLowerCase().endsWith('chat')
     ? ''
-    : 'd-none d-sm-none d-sm-none d-md-block';
-  // 'btn-pressed': this.state.isPressed,
-  // 'btn-over': !this.state.isPressed && this.state.isHovered
+    : 'd-none d-sm-none d-md-none d-lg-non d-xl-block';
   useEffect(() => {
     initSocket();
   }, []);

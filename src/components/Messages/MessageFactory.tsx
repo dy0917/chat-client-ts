@@ -1,5 +1,5 @@
-
-import { TMessage } from '../../store/slices/message';
+import './message.css'
+import { TMessage } from '../../types';
 import { BasicMessage } from './BasicMessage';
 import { NewMessage } from './NewMessage';
 
