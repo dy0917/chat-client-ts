@@ -30,7 +30,6 @@ export const BasicMessage = ({ message }: { message: TMessage }) => {
         >
           <h2>
             {message.context}
-            {message.context}
           </h2>
         </div>
       </div>
