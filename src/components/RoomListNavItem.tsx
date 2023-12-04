@@ -1,4 +1,4 @@
-import { Badge, Col, Container, ListGroup, Row } from 'react-bootstrap';
+import { Badge, ListGroup, Row } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import { TRoom } from '../types';
 import { useRef } from 'react';

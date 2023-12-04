@@ -1,4 +1,3 @@
-import { Badge, Row, Col } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { TMessage } from '../../types';
