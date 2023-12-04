@@ -20,16 +20,18 @@ export const BasicMessage = ({ message }: { message: TMessage }) => {
       <div>
         <Avatar name={avatarName()} size="45" />
       </div>
-
-      <div className=" ms-2 me-2">
-        <div
-          className={`text-break p-2 text-white ${
-            isLoginUser() ? 'bg-primary' : 'bg-secondary'
-          }`}
-        >
-          <h2>
-            {message.context}
-          </h2>
+      <div>
+        <div className={`d-flex ms-1 me-2 ${isLoginUser() ? 'flex-row-reverse' : ''}`}>
+          <div className={`${isLoginUser() ? 'triangleRight' : 'triangleLeft'}`} />
+          <div>
+            <div
+              className={`text-break p-2 text-white rounded-4 ${
+                isLoginUser() ? 'bg-primary' : 'bg-secondary'
+              }`}
+            >
+              <h2>{message.context}</h2>
+            </div>
+          </div>
         </div>
       </div>
     </div>

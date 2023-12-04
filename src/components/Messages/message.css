@@ -1,17 +1,17 @@
-.triangle-left {
+.triangleLeft {
     width: 0;
     height: 0;
-    margin-top: 5px;
+    margin-top: 13px;
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
-    border-right: 8px solid red;
+    border-right: 8px solid var(--bs-gray-600);
 }
 
-.triangle-right {
+.triangleRight {
     width: 0;
     height: 0;
-    margin-top: 5px;
+    margin-top: 13px;
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
-    border-left: 8px solid red;
+    border-left: 8px solid  var(--bs-blue);
 }

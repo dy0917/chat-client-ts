@@ -94,7 +94,7 @@ export const ChatBoard = () => {
         <div ref={messagesEndRef} />
       </Container>
 
-      <Container className="bottom-0">
+      <Container className="mt-2">
         <Row>
           {/* Message input box */}
           <Col>
