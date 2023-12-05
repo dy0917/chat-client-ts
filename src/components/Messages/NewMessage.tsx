@@ -1,5 +1,5 @@
-import { Badge, Spinner } from 'react-bootstrap';
-import { updateTempMessage } from '../../store/slices/message';
+import { Spinner } from 'react-bootstrap';
+import { updateTempMessage } from '../../store/slices/room';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { useSocketContext } from '../../store/socketContext';
@@ -25,7 +25,6 @@ export const NewMessage = ({ message }: { message: TMessage }) => {
       message,
       (response: { status: string; message: TMessage }) => {
         if (response.status.toString().toLowerCase() == '200') {
-          console.log('response.message', response.message);
           dispatch(
             updateTempMessage({
               ...response.message,

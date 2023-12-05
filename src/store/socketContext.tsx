@@ -2,7 +2,7 @@ import React, { createContext, useContext, ReactNode, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { io, Socket } from 'socket.io-client';
 import { RootState } from '.';
-import { addMessage } from './slices/message';
+import { addMessage } from './slices/room';
 
 type SocketContextProps = {
   socket: Socket;
@@ -27,9 +27,7 @@ export const SocketProvider: React.FC<{ children: ReactNode }> = ({
       },
     });
     tSocket.on('receiveMessge', (msg) => {
-      console.log('receiveMessge', msg);
       dispatch(addMessage(msg));
-      // setMessages((messages) => [...messages, msg]);
     });
     setSocket(tSocket);
   };

@@ -12,7 +12,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { getRoomById } from '../store/slices/room';
 import { NavLink, useParams } from 'react-router-dom';
-import { addMessage, getMessageByRoomId } from '../store/slices/message';
+import { addMessage } from '../store/slices/room';
 import { RootState } from '../store';
 import { MessageFactory } from './Messages/MessageFactory';
 import { TMessage } from '../types';
@@ -30,10 +30,6 @@ export const ChatBoard = () => {
   const dispatch = useDispatch();
   const room = useSelector((state: RootState) =>
     getRoomById(state.room, roomId!)
-  );
-
-  const messages = useSelector((state: RootState) =>
-    getMessageByRoomId(state.message, roomId!)
   );
 
   const contact = room.users[0];
@@ -54,7 +50,7 @@ export const ChatBoard = () => {
       senderId: me?._id,
       receiverId: room.users[0]._id,
       tempId: uuidv4(),
-    };
+    } as TMessage;
 
     dispatch(addMessage(newMessageObj));
     reset({ context: '' });
@@ -68,7 +64,7 @@ export const ChatBoard = () => {
   eventBus.on('onScrollToBottomEvent', scrollToBottom);
   useEffect(() => {
     scrollToBottom();
-  }, [messages]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [room.messages]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <>
       <div className="d-flex flex-row-reverse bd-highlight">
@@ -92,7 +88,7 @@ export const ChatBoard = () => {
           maxHeight: '78vh',
         }}
       >
-        {messages.map((message: TMessage) => (
+        {room.messages!.map((message: TMessage) => (
           <Row key={uuidv4()}>
             <MessageFactory message={message}></MessageFactory>
           </Row>

@@ -5,10 +5,11 @@ import { eventBus } from '../utils/eventBus';
 import { TRoom } from '../types';
 import { RoomListNavItem } from './RoomListNavItem';
 import { NavLink } from 'react-router-dom';
-import moment from 'moment';
+import { allRooms } from '../store/slices/room';
 
 export const RoomCol = () => {
-  const { rooms } = useSelector((state: RootState) => state.room);
+  const rooms = useSelector((state: RootState) => allRooms(state.room));
+
   const onShow = () => {
     eventBus.emit('showContactModal');
   };
@@ -36,16 +37,17 @@ export const RoomCol = () => {
       </Row>
       <Row>
         <ListGroup as="ol">
-          {rooms.map((room: TRoom) => (
-                <NavLink
-                style={{ textDecoration: 'none' }}
-                to={`/chat/${room._id}`}
-                key={room._id}
-              >
-                {({ isActive }) => (
-                <RoomListNavItem room={room} isActive={isActive} lastActive={ moment.utc().toISOString()} />
-                )}
-              </NavLink>
+          {Object.values(rooms).map((room: TRoom) => (
+            <NavLink
+              style={{ textDecoration: 'none' }}
+              to={`/chat/${room._id}`}
+              key={room._id}
+              onClick={() => console.log('click')}
+            >
+              {({ isActive }) => (
+                <RoomListNavItem room={room} isActive={isActive} />
+              )}
+            </NavLink>
           ))}
         </ListGroup>
       </Row>

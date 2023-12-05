@@ -3,7 +3,7 @@ import counterReducer from './slices/counterSlice';
 import authReducer from './slices/auth';
 import contactsReducer from './slices/contact';
 import roomReducer from './slices/room';
-import messageReducer from './slices/message';
+// import messageReducer from './slices/message';
 
 const store = configureStore({
   reducer: {
@@ -11,7 +11,7 @@ const store = configureStore({
     auth: authReducer,
     contacts: contactsReducer,
     room: roomReducer,
-    message: messageReducer
+    // message: messageReducer
   },
 });
 
