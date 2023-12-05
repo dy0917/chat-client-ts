@@ -1,60 +1,53 @@
-import { Badge, ListGroup, Row } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
+import { Badge, Col, Container, ListGroup, Row } from 'react-bootstrap';
 import { TRoom } from '../types';
-import { useRef } from 'react';
-import moment from 'moment';
+
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { getMessageByRoomId } from '../store/slices/message';
+import { getIncomeingMessageByRoomId } from '../store/slices/message';
 
-export const RoomListNavItem = ({ room }: { room: TRoom }) => {
-  const lastActiveTime = useRef(moment.utc().toISOString());
-
+export const RoomListNavItem = ({
+  room,
+  isActive,
+  lastActive,
+}: {
+  room: TRoom;
+  isActive: boolean;
+  lastActive: string;
+}) => {
   const getClassName = (isActive: boolean) => {
-    return `d-flex justify-content-between align-items-start list-group-item  ${
+    return `d-flex list-group-item  ${
       isActive ? 'active' : ''
     } `;
   };
+
   const messages = useSelector((state: RootState) =>
-    getMessageByRoomId(state.message, room._id)
-  ).filter((m) => moment.utc(m.createdAt).isAfter(lastActiveTime.current));
+    getIncomeingMessageByRoomId(state.message, room._id, lastActive.toString())
+  );
 
   const lastMessage =
-    messages.length > 0 ? messages[messages.length - 1] : undefined;
-
-  const linkOnClick = () => {
-    lastActiveTime.current = moment.utc().toISOString();
-  };
+    messages.length > 0 && !isActive
+      ? messages[messages.length - 1]
+      : undefined;
 
   return (
-    <NavLink
-      style={{ textDecoration: 'none' }}
-      to={`/chat/${room._id}`}
-      key={room._id}
-    >
-      {({ isActive }) => (
-        <ListGroup.Item
-          as="li"
-          className={getClassName(isActive)}
-          onClick={linkOnClick}
-        >
-          <Row>
-            <div className="fw-bold">
-              {room.users[0].firstName}
-              {!isActive && lastMessage && (
-                <div className=" float-end">
-                  <Badge bg="danger" pill>
-                    {messages.length}
-                  </Badge>
-                </div>
-              )}
-            </div>
-            <div className="text-truncate">
-              {lastMessage && lastMessage.context}
-            </div>
-          </Row>
-        </ListGroup.Item>
-      )}
-    </NavLink>
+    <ListGroup.Item as="li" className={getClassName(isActive)}>
+      <Container>
+
+          <div className="fw-bold">
+            {room.users[0].firstName}
+            {lastMessage && (
+              <div className="float-end">
+                <Badge bg="danger" pill>
+                  {messages.length}
+                </Badge>
+              </div>
+            )}
+          </div>
+          <div className="text-truncate">
+            {lastMessage && lastMessage.context}
+          </div>
+     
+      </Container>
+    </ListGroup.Item>
   );
 };

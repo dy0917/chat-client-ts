@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import {
   Container,
@@ -7,6 +7,7 @@ import {
   Row,
   FormControl,
   Button,
+  Form,
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRoomById } from '../store/slices/room';
@@ -15,6 +16,12 @@ import { addMessage, getMessageByRoomId } from '../store/slices/message';
 import { RootState } from '../store';
 import { MessageFactory } from './Messages/MessageFactory';
 import { TMessage } from '../types';
+import { eventBus } from '../utils/eventBus';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+
+type TContext = {
+  context: string;
+};
 
 export const ChatBoard = () => {
   let { roomId } = useParams<{ roomId: string | undefined }>();
@@ -31,13 +38,18 @@ export const ChatBoard = () => {
 
   const contact = room.users[0];
 
-  const [newMessage, setNewMessage] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const sumbitMessage = async () => {
-    if (newMessage.trim() === '') return;
 
+  const { control, handleSubmit, reset } = useForm<TContext>({
+    defaultValues: {
+      context: '',
+    },
+  });
+
+  const sumbitMessage: SubmitHandler<TContext> = (data: TContext) => {
+    if (data.context.trim() === '') return;
     const newMessageObj = {
-      context: newMessage,
+      context: data.context,
       chatRoomId: room._id,
       senderId: me?._id,
       receiverId: room.users[0]._id,
@@ -45,9 +57,7 @@ export const ChatBoard = () => {
     };
 
     dispatch(addMessage(newMessageObj));
-    setNewMessage('');
-    // Scroll to the bottom when a new message is added
-    scrollToBottom();
+    reset({ context: '' });
   };
 
   // Function to scroll to the bottom of the chat
@@ -55,10 +65,10 @@ export const ChatBoard = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // useEffect to scroll to the bottom when the component mounts
+  eventBus.on('onScrollToBottomEvent', scrollToBottom);
   useEffect(() => {
     scrollToBottom();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [messages]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <>
       <div className="d-flex flex-row-reverse bd-highlight">
@@ -78,37 +88,44 @@ export const ChatBoard = () => {
           marginTop: '10px',
           overflowY: 'auto',
           flexDirection: 'column',
-          minHeight: '80vh',
-          maxHeight: '80vh',
+          minHeight: '78vh',
+          maxHeight: '78vh',
         }}
       >
-        {/* Message list */}
-
         {messages.map((message: TMessage) => (
           <Row key={uuidv4()}>
-            <MessageFactory
-              message={message}
-            ></MessageFactory>
+            <MessageFactory message={message}></MessageFactory>
           </Row>
         ))}
-        <div ref={messagesEndRef} />
+        <Row ref={messagesEndRef}></Row>
       </Container>
 
       <Container className="mt-2">
         <Row>
           {/* Message input box */}
           <Col>
-            <InputGroup>
-              <FormControl
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type your message..."
-              />
-              <Button variant="primary" onClick={sumbitMessage}>
-                Send
-              </Button>
-            </InputGroup>
+            <Form onSubmit={handleSubmit(sumbitMessage)}>
+              <Form.Group className="mb-3" controlId="formGroupEmail">
+                <Controller
+                  name="context"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <InputGroup>
+                        <FormControl
+                          type="text"
+                          {...field}
+                          placeholder="Type your message..."
+                        />
+                        <Button variant="primary" type={'submit'}>
+                          Send
+                        </Button>
+                      </InputGroup>
+                    </>
+                  )}
+                />
+              </Form.Group>
+            </Form>
           </Col>
         </Row>
       </Container>

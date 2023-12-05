@@ -4,6 +4,8 @@ import { RootState } from '../store';
 import { eventBus } from '../utils/eventBus';
 import { TRoom } from '../types';
 import { RoomListNavItem } from './RoomListNavItem';
+import { NavLink } from 'react-router-dom';
+import moment from 'moment';
 
 export const RoomCol = () => {
   const { rooms } = useSelector((state: RootState) => state.room);
@@ -11,11 +13,6 @@ export const RoomCol = () => {
     eventBus.emit('showContactModal');
   };
 
-  // const getClassName = (isActive: boolean) => {
-  //   return `d-flex justify-content-between align-items-start list-group-item  ${
-  //     isActive ? 'active' : ''
-  //   } `;
-  // };
   return (
     <Container
       fluid
@@ -40,7 +37,15 @@ export const RoomCol = () => {
       <Row>
         <ListGroup as="ol">
           {rooms.map((room: TRoom) => (
-            <RoomListNavItem room={room} key={ room._id} />
+                <NavLink
+                style={{ textDecoration: 'none' }}
+                to={`/chat/${room._id}`}
+                key={room._id}
+              >
+                {({ isActive }) => (
+                <RoomListNavItem room={room} isActive={isActive} lastActive={ moment.utc().toISOString()} />
+                )}
+              </NavLink>
           ))}
         </ListGroup>
       </Row>

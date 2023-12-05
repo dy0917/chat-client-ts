@@ -1,6 +1,7 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { loginWithTokenAsync } from './auth';
 import { TMessage } from '../../types';
+import moment from 'moment';
 
 const sliceName = 'contacts';
 type TMessageState = {
@@ -30,7 +31,7 @@ const contactsSlice = createSlice({
       const message = state.messages[index];
       const updatedMessage = {
         ...message,
-        _id: action.payload._id,
+        ...action.payload,
         tempId: undefined,
       };
       state.messages[index] = updatedMessage;
@@ -44,6 +45,12 @@ const contactsSlice = createSlice({
 });
 
 const selectRoomId = (_state: TMessageState, roomId: string) => roomId;
+const activeTime = (
+  _state: TMessageState,
+  _roomId: string,
+  activeTime: string
+) => activeTime;
+
 const allMessages = (state: TMessageState) => state.messages;
 
 export const getMessageByRoomId = createSelector(
@@ -51,6 +58,18 @@ export const getMessageByRoomId = createSelector(
   (messages, roomId) => {
     const selectedMessages = messages.filter(
       (message: TMessage) => message.chatRoomId == roomId
+    );
+    return selectedMessages;
+  }
+);
+
+export const getIncomeingMessageByRoomId = createSelector(
+  [allMessages, selectRoomId, activeTime],
+  (messages, roomId, activeTime) => {
+    const selectedMessages = messages.filter(
+      (message: TMessage) =>
+        message.chatRoomId == roomId &&
+        moment.utc(message.createdAt).isAfter(activeTime)
     );
     return selectedMessages;
   }

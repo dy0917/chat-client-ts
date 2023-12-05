@@ -1,12 +1,12 @@
 import './message.css'
 import { TMessage } from '../../types';
-import { BasicMessage } from './BasicMessage';
+import { SentMessage } from './SentMessage';
 import { NewMessage } from './NewMessage';
 
 export function MessageFactory({ message }: { message: TMessage }) {
   const getMessageComponent = (message: TMessage) => {
     if (message._id) {
-      return <BasicMessage message={message}></BasicMessage>;
+      return <SentMessage message={message}></SentMessage>;
     } else if (message.tempId) {
       return <NewMessage message={message}></NewMessage>;
     }

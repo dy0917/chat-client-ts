@@ -5,6 +5,8 @@ import { RootState } from '../../store';
 import { useSocketContext } from '../../store/socketContext';
 import { useEffect, useState } from 'react';
 import { TMessage } from '../../types';
+import { eventBus } from '../../utils/eventBus';
+import { Message } from './BasicMessage';
 
 export const NewMessage = ({ message }: { message: TMessage }) => {
   const { me } = useSelector((state: RootState) => state.auth);
@@ -23,6 +25,7 @@ export const NewMessage = ({ message }: { message: TMessage }) => {
       message,
       (response: { status: string; message: TMessage }) => {
         if (response.status.toString().toLowerCase() == '200') {
+          console.log('response.message', response.message);
           dispatch(
             updateTempMessage({
               ...response.message,
@@ -32,6 +35,7 @@ export const NewMessage = ({ message }: { message: TMessage }) => {
         } else {
           setDoesShowResendButton(true);
         }
+        eventBus.emit('onScrollToBottomEvent');
         setLoading(false);
         setDoesShowResendButton(true);
       }
@@ -78,11 +82,7 @@ export const NewMessage = ({ message }: { message: TMessage }) => {
           </h4>
         </span>
       )}
-      <h2>
-        <Badge pill bg={me!._id == message.senderId ? 'primary' : 'secondary'}>
-          {message.context}
-        </Badge>
-      </h2>
+      <Message sender={me!} message={message}></Message>
     </div>
   );
 };
