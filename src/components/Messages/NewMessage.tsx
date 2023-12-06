@@ -15,7 +15,7 @@ export const NewMessage = ({ message }: { message: TMessage }) => {
   const [doesShowResendButton, setDoesShowResendButton] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
-    sendMessage();
+    if (message.tempId) sendMessage();
   }, []);
 
   const sendMessage = () => {
@@ -23,7 +23,7 @@ export const NewMessage = ({ message }: { message: TMessage }) => {
     socket.emit(
       'sendMessage',
       message,
-      (response: { status: string; message: TMessage }) => {
+      (response: { status: string; message: TMessage; }) => {
         if (response.status.toString().toLowerCase() == '200') {
           dispatch(
             updateTempMessage({
@@ -36,7 +36,7 @@ export const NewMessage = ({ message }: { message: TMessage }) => {
         }
         eventBus.emit('onScrollToBottomEvent');
         setLoading(false);
-        setDoesShowResendButton(true);
+        setDoesShowResendButton(false);
       }
     );
   };

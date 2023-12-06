@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 import { TMessage, TUser } from '../../types';
 import Avatar from 'react-avatar';
 
@@ -8,8 +10,8 @@ export const Message = ({
   sender: TUser;
   message: TMessage;
 }) => {
-  const isSender = () => sender!._id == message.senderId;
-
+  const { me } = useSelector((state: RootState) => state.auth);
+  const isSender = () => sender!._id == me?._id;
   const avatarName = () => {
     return `${sender!.firstName} ${sender!.lastName}`;
   };
@@ -20,13 +22,9 @@ export const Message = ({
       </div>
       <div>
         <div
-          className={`d-flex ms-1 me-2 ${
-            isSender() ? 'flex-row-reverse' : ''
-          }`}
+          className={`d-flex ms-1 me-2 ${isSender() ? 'flex-row-reverse' : ''}`}
         >
-          <div
-            className={`${isSender() ? 'triangleRight' : 'triangleLeft'}`}
-          />
+          <div className={`${isSender() ? 'triangleRight' : 'triangleLeft'}`} />
           <div>
             <div
               className={`text-break p-2 text-white rounded-4 ${

@@ -22,7 +22,7 @@ export const RoomListNavItem = ({
   );
   const [messages, setMessages] = useState(tempMessages);
   useEffect(() => {
-    if (!isActive) {
+    if (!isActive && tempMessages) {
       setMessages(
         tempMessages!.filter((message: TMessage) =>
           moment.utc(message.createdAt).isAfter(lastActive.current)
@@ -39,7 +39,7 @@ export const RoomListNavItem = ({
   };
 
   const lastMessage =
-    messages!.length > 0 && !isActive
+    messages && !isActive
       ? messages![messages!.length - 1]
       : undefined;
 

@@ -3,12 +3,14 @@ import {
   createSlice,
   createAsyncThunk,
   createSelector,
+  PayloadAction,
 } from '@reduxjs/toolkit';
 import { isPendingAction, isFulfilledAction } from './index';
 import getAxios from '../../utils/axiosFactory';
 import { TUser } from '../../types/user';
 import { loginWithTokenAsync } from './auth';
 import { TRoom } from '../../types';
+import { newContact } from './room';
 
 const sliceName = 'contacts';
 type TContactState = {
@@ -50,8 +52,7 @@ const tempContacts = (state: TContactState) => state.tempContacts;
 const selectedContactId = (_state: TContactState, contactId: string) =>
   contactId;
 
-
-  const contacts = (state: TContactState) => state.contacts;
+const contacts = (state: TContactState) => state.contacts;
 
 export const getExistedContactById = createSelector(
   [contacts, selectedContactId],
@@ -82,6 +83,9 @@ const contactsSlice = createSlice({
       state.tempContacts = [];
       localStorage.clear();
     },
+    addContact: (state, action) => {
+      state.contacts = [...state.contacts!, action.payload];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -103,6 +107,10 @@ const contactsSlice = createSlice({
           []
         );
       })
+      .addCase(newContact.fulfilled, (_state, action: PayloadAction<TRoom>) => {
+     
+        _state.contacts = [..._state.contacts!, ...action.payload.users];
+      })
 
       .addMatcher(isPendingAction(sliceName), (state) => {
         state.status = 'loading';
@@ -112,5 +120,7 @@ const contactsSlice = createSlice({
       });
   },
 });
+
+export const { addContact } = contactsSlice.actions;
 
 export default contactsSlice.reducer;

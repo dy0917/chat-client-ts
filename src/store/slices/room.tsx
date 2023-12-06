@@ -78,6 +78,11 @@ const roomSlice = createSlice({
       targetRoom.messages![index] = updatedMessage;
     },
 
+    addRoom: (state, action: PayloadAction<TRoom>) => {
+      state.rooms[action.payload._id] = action.payload
+ 
+    },
+
     // getRoomById(state, action) {},
     // addMessagesToRoom(state, action) {},
   },
@@ -111,6 +116,6 @@ export const getMessagesByRoomId = createSelector(
   }
 );
 
-export const { addMessage, updateTempMessage } = roomSlice.actions;
+export const { addMessage, updateTempMessage, addRoom } = roomSlice.actions;
 
 export default roomSlice.reducer;

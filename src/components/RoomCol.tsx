@@ -6,9 +6,24 @@ import { TRoom } from '../types';
 import { RoomListNavItem } from './RoomListNavItem';
 import { NavLink } from 'react-router-dom';
 import { allRooms } from '../store/slices/room';
+import moment from 'moment';
 
 export const RoomCol = () => {
-  const rooms = useSelector((state: RootState) => allRooms(state.room));
+  const selectedRooms = Object.values(
+    useSelector((state: RootState) => allRooms(state.room))
+  );
+
+  const rooms = selectedRooms.sort((room1, room2) => {
+    if (!room1.messages || room1.messages?.length === 0) return 1;
+    if (!room2.messages || room2.messages?.length === 0) return -1;
+    const room1LastMessage = room1.messages![room1.messages!.length - 1];
+    const room2LastMessage = room2.messages![room2.messages!.length - 1];
+    return moment
+      .utc(room1LastMessage.createdAt)
+      .isAfter(room2LastMessage.createdAt)
+      ? -1
+      : 1;
+  });
 
   const onShow = () => {
     eventBus.emit('showContactModal');

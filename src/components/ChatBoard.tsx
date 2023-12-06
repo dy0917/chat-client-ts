@@ -51,7 +51,6 @@ export const ChatBoard = () => {
       receiverId: room.users[0]._id,
       tempId: uuidv4(),
     } as TMessage;
-
     dispatch(addMessage(newMessageObj));
     reset({ context: '' });
   };
