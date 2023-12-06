@@ -9,7 +9,10 @@ type SocketContextProps = {
   socket: Socket;
   initSocket: () => void;
 };
-const ENDPOINT = 'http://localhost:5000';
+const envURL = import.meta.env.VITE_API_URL;
+
+const ENDPOINT = envURL ? `https://${envURL}` : 'http://localhost:5000/';
+
 export const SocketContext = createContext<SocketContextProps | undefined>(
   undefined
 );

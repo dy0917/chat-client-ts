@@ -21,30 +21,6 @@ function AppRoutes() {
       </Route>
 
       <Route path="*" element={<PageNotFound />} />
-
-      {/* index matches on default/home URL: / */}
-      {/* <Route index element={<App {...props} />} />
-      <Route path="jennet" element={<Jennetpage {...props} />} />
-      <Route path="calculator" element={<Calculator {...props} />} />
-      <Route path="activityFinder" element={<ActivityFinder {...props} />} />
-      <Route path="MUIDemo" element={<MUIDemo />}></Route>
-      <Route
-        path="dashboard"
-        element={<ProtectedRoute redirectPath={'/jennet'} />}
-      >
-        <Route index element={<DashboardPage {...props} />} />
-        <Route path="messages" element={<DashboardMessages />} />
-        <Route path="tasks" element={<DashboardTasks />} />
-      </Route>
-
-      <Route path="todo" element={<ReduxTodoList {...props} />} />
-      <Route path="/subscribe" element={<SubscribeForm {...props} />}></Route>
-      <Route path="/posts" element={<PostsPage {...props} />}>
-        <Route index element={<PostList />} />
-    
-        <Route path=":id" element={<Post />} />
-      </Route>
-      <Route path="*" element={<PageNotFound />} /> */}
     </Routes>
   );
 }
