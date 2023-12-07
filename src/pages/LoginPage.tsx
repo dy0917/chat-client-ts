@@ -68,7 +68,7 @@ function LoginPage() {
   return (
     <Container className="mt-5">
       <Row className="justify-content-center">
-        <Col md={{ span: 8 }}>
+        <Col md={{ span: 6 }}>
           <Form onSubmit={handleSubmit(handleLogin)}>
             <h2 className="text-center mb-4">Login</h2>
             <Form.Group className="mb-3" controlId="formGroupEmail">

@@ -88,7 +88,7 @@ function RegisterPage() {
   return (
     <Container className="mt-5">
       <Row className="justify-content-center">
-        <Col md={{ span: 8 }}>
+        <Col md={{ span: 6 }}>
           <Form onSubmit={handleSubmit(handleRegistration)}>
             <h2 className="text-center mb-4">Sign up</h2>
             <Row>
