@@ -11,7 +11,7 @@ const ChatPage = () => {
 
   var btnClass = location.pathname.toLowerCase().endsWith('chat')
     ? ''
-    : 'd-none d-sm-none d-md-none d-lg-non d-xl-block';
+    : 'd-none d-sm-none d-md-none d-lg-block';
   useEffect(() => {
     initSocket();
   }, []);

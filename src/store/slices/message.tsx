@@ -1,8 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { loginWithTokenAsync } from './auth';
 import { TMessage } from '../../types';
+import getAxios from '../../utils/axiosFactory';
+import { AxiosError } from 'axios';
 
-const sliceName = 'contacts';
+const sliceName = 'messages';
 type TMessageState = {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error?: any;
@@ -42,6 +44,34 @@ const contactsSlice = createSlice({
     });
   },
 });
+
+export const getPreviousMessages = createAsyncThunk(
+  `${sliceName}/messages`,
+  async (
+    {
+      roomId,
+      lastMessageDateTime,
+    }: { roomId: string; lastMessageDateTime: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await getAxios().get('/api/v1/messages', {
+        params: {
+          roomId,
+          lastMessageDateTime,
+        },
+      });
+      return {
+        roomId,
+        messages: response.data.messages,
+      };
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return rejectWithValue(error.response?.data);
+      }
+    }
+  }
+);
 
 // export const { addMessage, updateTempMessage } = contactsSlice.actions;
 

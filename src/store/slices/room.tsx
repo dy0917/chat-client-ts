@@ -9,6 +9,8 @@ import {
 } from '@reduxjs/toolkit';
 import { loginWithTokenAsync } from './auth';
 import { TMessage, TRoom } from '../../types';
+import { getPreviousMessages } from './message';
+import moment from 'moment';
 
 const sliceName = 'room';
 
@@ -79,12 +81,8 @@ const roomSlice = createSlice({
     },
 
     addRoom: (state, action: PayloadAction<TRoom>) => {
-      state.rooms[action.payload._id] = action.payload
- 
+      state.rooms[action.payload._id] = action.payload;
     },
-
-    // getRoomById(state, action) {},
-    // addMessagesToRoom(state, action) {},
   },
 
   extraReducers: (builder) => {
@@ -97,6 +95,18 @@ const roomSlice = createSlice({
           {}
         );
         state.rooms = obj;
+      })
+      .addCase(getPreviousMessages.fulfilled, (state, action) => {
+        if (action.payload?.messages.length > 0) {
+          const room = state.rooms[action.payload?.roomId!];
+          room.messages = Array.from(
+            new Set([...action.payload?.messages, ...room.messages!])
+          ).sort((meesage1, message2) => {
+            return moment(meesage1.createdAt).isBefore(message2.createdAt)
+              ? -1
+              : 1;
+          });
+        }
       })
       .addCase(newContact.fulfilled, (state, action) => {
         state.rooms![action.payload._id] = action.payload;

@@ -14,11 +14,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getRoomById } from '../store/slices/room';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { addMessage } from '../store/slices/room';
-import { RootState } from '../store';
+import store, { AppDispatch, RootState } from '../store';
 import { MessageFactory } from './Messages/MessageFactory';
-import { TMessage } from '../types';
+import { TMessage, TNotificationEvent } from '../types';
 import { eventBus } from '../utils/eventBus';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { getPreviousMessages } from '../store/slices/message';
 
 type TContext = {
   context: string;
@@ -28,11 +29,12 @@ export const ChatBoard = () => {
   let { roomId } = useParams<{ roomId: string | undefined }>();
   const { me } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const room = useSelector((state: RootState) =>
     getRoomById(state.room, roomId!)
   );
 
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { control, handleSubmit, reset } = useForm<TContext>({
@@ -66,14 +68,38 @@ export const ChatBoard = () => {
       navigate('/chat');
       return;
     }
+  }, [room]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    messagesContainerRef.current!.onscroll = async function () {
+      if (messagesContainerRef.current?.scrollTop === 0) {
+        const selectedRoom = store.getState().room.rooms[room._id];
+        const lastMessage = selectedRoom.messages![0];
+        const previousLength = selectedRoom.messages?.length;
+        await dispatch(
+          getPreviousMessages({
+            roomId: room._id,
+            lastMessageDateTime: lastMessage.createdAt,
+          })
+        );
+        const updatedRoom = store.getState().room.rooms[room._id];
+        const updatedLength = updatedRoom.messages?.length;
+        if (previousLength === updatedLength) { 
+          eventBus.emit('addNotification', {text: 'No history messages', variant:"info"} as TNotificationEvent);
+        }
+  
+
+      }
+    };
     scrollToBottom();
-  }, [room?.messages]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       {room && (
         <>
           <div className="d-flex flex-row-reverse bd-highlight">
-            <div className="d-block d-xl-none">
+            <div className="d-block d-lg-none">
               <NavLink to={'/chat'}>
                 <Button>{'<'}</Button>
               </NavLink>
@@ -85,15 +111,16 @@ export const ChatBoard = () => {
 
           <Container
             fluid
+            ref={messagesContainerRef}
             style={{
               marginTop: '10px',
               overflowY: 'auto',
               flexDirection: 'column',
-              minHeight: '78vh',
-              maxHeight: '78vh',
+              minHeight: '75vh',
+              maxHeight: '75vh',
             }}
           >
-            {room.messages!.map((message: TMessage) => (
+            {room.messages?.map((message: TMessage) => (
               <Row key={uuidv4()}>
                 <MessageFactory message={message}></MessageFactory>
               </Row>
