@@ -11,6 +11,6 @@ export const SentMessage = ({ message }: { message: TMessage }) => {
   }
   );
 
-  const sender = () => (me!._id == message.senderId ? me : contact);
-  return <Message sender={sender()} message={message}></Message>;
+  const sender =me!._id == message.senderId ? me : contact;
+  return <Message sender={sender} message={message}></Message>;
 };

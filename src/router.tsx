@@ -6,6 +6,7 @@ import PageNotFound from './pages/PageNotFound';
 import ProtectedPage from './pages/ProtectedPage';
 import { TopNavbar } from './components/navbar';
 import { ChatBoard } from './components/ChatBoard';
+import Triple from './pages/Triples';
 
 function AppRoutes() {
   return (
@@ -17,6 +18,7 @@ function AppRoutes() {
           <Route path="/chat" element={<ChatPage />}>
             <Route path=":roomId" element={<ChatBoard />} />
           </Route>
+          <Route path='/triples'element={<Triple />}/>
         </Route>
       </Route>
 
