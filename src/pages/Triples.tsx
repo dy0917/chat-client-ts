@@ -1,12 +1,10 @@
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
-import { TripleButtonFactory } from '../components/TripleButton/TripleButtonFactory';
 
 // wrap around logged-in user only routes to protect them
 function Triple() {
   const row = 12;
   const col = 12;
-  const setOfTriples = 17;
   const mapTemplate = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
