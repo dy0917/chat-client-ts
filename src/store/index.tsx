@@ -11,7 +11,6 @@ const store = configureStore({
     auth: authReducer,
     contacts: contactsReducer,
     room: roomReducer,
-    // message: messageReducer
   },
 });
 
